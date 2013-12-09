@@ -22,4 +22,8 @@ phpinfo();
 ?>">/var/www/test.php
 sudo echo "127.0.0.1 NMC"> /etc/hosts
 sudo service apache2 restart
+sudo apt-get install portmap nfs-common -y
+sudo mkdir /webfiles
+sudo echo "192.168.10.10:/var/www/ /webfiles nfs rsize=8192,wsize=8192,timeo=14,intr">>/etc/fstab
+sudo chmod a+rw webfiles/
 sudo reboot
