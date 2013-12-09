@@ -61,4 +61,11 @@ sudo service apache2 restart
 sudo apt-get install portmap nfs-common -y
 sudo mkdir /webfiles
 sudo echo "192.168.10.10:/var/www/ /webfiles nfs rsize=8192,wsize=8192,timeo=14,intr">>/etc/fstab
+echo "System install mysql-server"
+sudo debconf-set-selections <<< 'mysql-server-5.5 mysql-server/root_password password 123'
+sudo debconf-set-selections <<< 'mysql-server-5.5 mysql-server/root_password_again password 123'
+sudo apt-get install mysql-server -y
+sudo apt-get install git -y
+sudo git clone https://github.com/amadeuszg22/Lab.git /LAB/
+
 sudo reboot
