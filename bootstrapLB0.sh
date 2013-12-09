@@ -16,6 +16,7 @@ sudo apt-get install php5-mysql -y
 sudo apt-get install php5-memcache -y
 echo "system enables modules"
 sudo a2enmod proxy_balancer
+sudo a2enmod proxy_http
 sudo a2enmod mem_cache
 echo "system restart apache2 service"
 echo "LB0" > /etc/hostname
