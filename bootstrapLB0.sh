@@ -1,9 +1,13 @@
 #!/usr/bin/env bash
+
 echo "System will install server features"
+
+
 echo "System Upgrades repositories"
 sudo apt-get update
 echo "System install apache2"
 sudo apt-get install apache2 -y
+sudo echo "127.0.0.1 NMC"> /etc/hosts
 echo "System install PHP5"
 sudo apt-get install php5 -y
 echo "system install libraries"
@@ -11,61 +15,78 @@ sudo apt-get install libapache2-mod-auth-mysql -y
 sudo apt-get install php5-mysql -y
 sudo apt-get install php5-memcache -y
 echo "system enables modules"
+sudo a2enmod proxy_balancer
+sudo a2enmod proxy_http
 sudo a2enmod mem_cache
 echo "system restart apache2 service"
-sudo echo "<VirtualHost *:80>
-	ServerAdmin webmaster@localhost
+echo "LB0" > /etc/hostname
+touch /var/www/test.php
+chmod a+rw /var/www/test.php
+echo "
+<?php
+phpinfo();
+?>">/var/www/test.php
+sudo rm /etc/apache2/sites-enabled/000-default
+sudo touch /etc/apache2/sites-enabled/NMC
+sudo echo "
+<VirtualHost *:80>
+        ProxyRequests off
+        
+        ServerName NMC
 
-	DocumentRoot /webfiles/
-	<Directory />
-		Options FollowSymLinks
-		AllowOverride None
-	</Directory>
-	<Directory /webfiles/>
-		Options Indexes FollowSymLinks MultiViews
-		AllowOverride None
-		Order allow,deny
-		allow from all
-	</Directory>
+        <Proxy balancer://NMC>
+                # WebHead1
+                BalancerMember http://192.168.10.11:80
+                # WebHead2
+                BalancerMember http://192.168.10.12:80
 
-	ScriptAlias /cgi-bin/ /usr/lib/cgi-bin/
-	<Directory "/usr/lib/cgi-bin">
-		AllowOverride None
-		Options +ExecCGI -MultiViews +SymLinksIfOwnerMatch
-		Order allow,deny
-		Allow from all
-	</Directory>
+                # Security 'technically we aren't blocking
+                # anyone but this the place to make those
+                # chages
+                Order Deny,Allow
+                Deny from none
+                Allow from all
 
-	ErrorLog ${APACHE_LOG_DIR}/error.log
+                # Load Balancer Settings
+                # We will be configuring a simple Round
+                # Robin style load balancer.  This means
+                # that all webheads take an equal share of
+                # of the load.
+                ProxySet lbmethod=byrequests
 
-	# Possible values include: debug, info, notice, warn, error, crit,
-	# alert, emerg.
-	LogLevel warn
+        </Proxy>
 
-	CustomLog ${APACHE_LOG_DIR}/access.log combined
+        # balancer-manager
+        # This tool is built into the mod_proxy_balancer
+        # module and will allow you to do some simple
+        # modifications to the balanced group via a gui
+        # web interface.
+        <Location /balancer-manager>
+                SetHandler balancer-manager
 
-    Alias /doc/ "/usr/share/doc/"
-    <Directory "/usr/share/doc/">
-        Options Indexes MultiViews FollowSymLinks
-        AllowOverride None
-        Order deny,allow
-        Deny from all
-        Allow from 127.0.0.0/255.0.0.0 ::1/128
-    </Directory>
+                # I recommend locking this one down to your
+                # your office
+                Order deny,allow
+                Allow from all
+        </Location>
 
-</VirtualHost>">/etc/apache2/sites-enabled/NMC
-rm /etc/apache2/sites-enabled/000-default
-echo "SRV" > /etc/hostname
-sudo echo "127.0.0.1 NMC"> /etc/hosts
+        # Point of Balance
+        # This setting will allow to explicitly name the
+        # the location in the site that we want to be
+        # balanced, in this example we will balance "/"
+        # or everything in the site.
+        ProxyPass /balancer-manager !
+        ProxyPass / balancer://NMC/
+
+</VirtualHost>
+">/etc/apache2/sites-enabled/NMC
 sudo service apache2 restart
-sudo apt-get install portmap nfs-common -y
-sudo mkdir /webfiles
-sudo echo "192.168.10.10:/var/www/ /webfiles nfs rsize=8192,wsize=8192,timeo=14,intr">>/etc/fstab
-echo "System install mysql-server"
-sudo debconf-set-selections <<< 'mysql-server-5.5 mysql-server/root_password password 123'
-sudo debconf-set-selections <<< 'mysql-server-5.5 mysql-server/root_password_again password 123'
-sudo apt-get install mysql-server -y
+echo "system install NFS"
+sudo apt-get install nfs-kernel-server nfs-common portmap
+sudo echo "/var/www/ (rw,sync,subtree_check)">> /etc/exports
 sudo apt-get install git -y
-sudo git clone https://github.com/amadeuszg22/Lab.git /LAB/
-
+sudo git clone https://github.com/amadeuszg22/Lab.git /Lab/
+sudo rm /var/www/*
+sudo cp /Lab/*.php /var/www/
+sudo chmod a+rw /var/www/*
 sudo reboot
