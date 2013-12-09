@@ -12,5 +12,10 @@ config.vm.define "SRV1" do |SRV1|
     SRV1.vm.provision :shell, :path => "bootstrapSRV1.sh"
     SRV1.vm.network :hostonly, "192.168.10.11" 
  end
-  
+config.vm.define "SRV2" do |SRV2|
+    SRV2.vm.box = "apache2"
+    SRV2.vm.box_url = "http://files.vagrantup.com/precise32.box"
+    SRV2.vm.provision :shell, :path => "bootstrapSRV1.sh"
+    SRV2.vm.network :hostonly, "192.168.10.12" 
+ end
 end
