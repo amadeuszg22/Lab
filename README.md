@@ -1,6 +1,8 @@
 Lab
 ===
 
-LAB-Vagrant
+LAB -Vagrant
 
-LB0- Load balancer
+LB0 -Load balancer
+
+SRV1 -Apache
