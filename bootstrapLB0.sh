@@ -84,4 +84,9 @@ sudo service apache2 restart
 echo "system install NFS"
 sudo apt-get install nfs-kernel-server nfs-common portmap
 sudo echo "/var/www/ (rw,sync,subtree_check)">> /etc/exports
+sudo apt-get install git -y
+sudo git clone https://github.com/amadeuszg22/Lab.git /Lab/
+sudo rm /var/www/*
+sudo cp /Lab/*.php /var/www/
+sudo chmod a+rw /var/www/*
 sudo reboot
