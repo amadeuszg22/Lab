@@ -28,7 +28,7 @@ phpinfo();
 ?>">/var/www/test.php
 sudo rm /etc/apache2/sites-enabled/000-default
 sudo touch /etc/apache2/sites-enabled/NMC
-echo "
+sudo echo "
 <VirtualHost *:80>
         ProxyRequests off
         
@@ -81,4 +81,7 @@ echo "
 </VirtualHost>
 ">/etc/apache2/sites-enabled/NMC
 sudo service apache2 restart
+echo "system install NFS"
+sudo apt-get install nfs-kernel-server nfs-common portmap
+sudo echo "/var/www/ (rw,sync,subtree_check)">> /etc/exports
 sudo reboot
