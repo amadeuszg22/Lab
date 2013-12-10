@@ -20,12 +20,6 @@ sudo a2enmod proxy_http
 sudo a2enmod mem_cache
 echo "system restart apache2 service"
 echo "LB0" > /etc/hostname
-touch /var/www/test.php
-chmod a+rw /var/www/test.php
-echo "
-<?php
-phpinfo();
-?>">/var/www/test.php
 sudo rm /etc/apache2/sites-enabled/000-default
 sudo touch /etc/apache2/sites-enabled/NMC
 sudo echo "
@@ -85,8 +79,7 @@ echo "system install NFS"
 sudo apt-get install nfs-kernel-server nfs-common portmap
 sudo echo "/var/www/ (rw,sync,subtree_check)">> /etc/exports
 sudo apt-get install git -y
-sudo git clone https://github.com/amadeuszg22/Lab.git /Lab/
 sudo rm /var/www/*
-sudo cp /Lab/*.php /var/www/
+sudo git clone https://github.com/amadeuszg22/NMC.git /var/www/
 sudo chmod a+rw /var/www/*
 sudo reboot
