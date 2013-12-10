@@ -15,6 +15,8 @@ There is no big difrence betwen this two configurations :)
 webapp user: ama
 pass: Zaq220991
 
+DB name : Nagios_Inventory
+
 DB user: root
 db pass: Q
 
