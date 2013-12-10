@@ -22,3 +22,8 @@ db pass: Q
 
 replication user: sync
 pass: Q
+
+Currently devide all queries 50/50 for this two servers. Replication is configured that SRV1 is Master and SRV2 is Slave server. I have to make chaneges in application code to make all inserts updates and drops on replication master and read by Select from Slave server
+
+Application use session technology and user panel so i configured session folder on NAS/LB server to keep sesion consistency
+
