@@ -13,4 +13,10 @@ I make configuration according to your diagram to safe your hardware and time re
 There is no big difrence betwen this two configurations :)
 
 webapp user: ama
-pass Zaq220991
+pass: Zaq220991
+
+DB user: root
+db pass: Q
+
+replication user: sync
+pass: Q
