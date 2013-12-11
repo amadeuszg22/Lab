@@ -1,6 +1,6 @@
 Vagrant.configure("2") do |config|  
   config.vm.box = "precise"
-  config.vm.box_url = "http://files.vagrantup.com/precise64.box"
+  config.vm.box_url = "http://files.vagrantup.com/precise32.box"
  
   config.vm.define :LB do |lb| 
     lb.vm.hostname = "LB0"
@@ -16,7 +16,7 @@ Vagrant.configure("2") do |config|
   
  end
  
-   config.vm.define :srvp do |srvs|
+   config.vm.define :srvs do |srvs|
     srvs.vm.hostname = "SRV2"
     srvs.vm.network :private_network, ip: "192.168.10.12"  
  	srvs.vm.provision :shell, :path => "bootstrapSRV2.sh"
