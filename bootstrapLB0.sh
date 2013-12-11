@@ -7,7 +7,7 @@ echo "System Upgrades repositories"
 sudo apt-get update
 echo "System install apache2"
 sudo apt-get install apache2 -y
-sudo echo "127.0.0.1 NMC"> /etc/hosts
+sudo echo "127.0.0.1 LB0"> /etc/hosts
 echo "System install PHP5"
 sudo apt-get install php5 -y
 echo "system install libraries"
