@@ -56,7 +56,7 @@ sudo echo "<VirtualHost *:80>
 </VirtualHost>">/etc/apache2/sites-enabled/NMC
 rm /etc/apache2/sites-enabled/000-default
 echo "SRV1" > /etc/hostname
-sudo echo "127.0.0.1 NMC"> /etc/hosts
+sudo echo "127.0.0.1 SRV1"> /etc/hosts
 sudo service apache2 restart
 sudo apt-get install portmap nfs-common -y
 sudo mkdir /webfiles
