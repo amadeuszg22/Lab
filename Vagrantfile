@@ -1,21 +1,26 @@
-Vagrant::Config.run do |config|
-
-  config.vm.define "LB0" do |LB0|
-    LB0.vm.box = "Load Balancer"
-    LB0.vm.box_url = "http://files.vagrantup.com/precise32.box"
-    LB0.vm.provision :shell, :path => "bootstrapLB0.sh"
-    LB0.vm.network :hostonly, "192.168.10.10" 
+Vagrant.configure("2") do |config|  
+  config.vm.box = "precise64"
+  config.vm.box_url = "http://files.vagrantup.com/precise64.box"
+ 
+  config.vm.define :LB0 do |lb| 
+    lb.vm.hostname = "Load Balancer"
+    lb.vm.network :private_network, ip: "192.168.10.10"    
+	  lb.vm.provision :shell, :path => "bootstrapLB0.sh"
+    lb.provision_as_role :LB0
+  end
+  
+  config.vm.define :srv1 do |srvp|
+    srvp.vm.box = "apache1"
+    srvp.vm.network :private_network, ip: "192.168.10.11"  
+	 srvp.vm.provision :shell, :path => "bootstrapSRV1.sh"
+    srvp.provision_as_role :srv1	
  end
-config.vm.define "SRV1" do |SRV1|
-    SRV1.vm.box = "apache1"
-    SRV1.vm.box_url = "http://files.vagrantup.com/precise32.box"
-    SRV1.vm.provision :shell, :path => "bootstrapSRV1.sh"
-    SRV1.vm.network :hostonly, "192.168.10.11" 
+ 
+   config.vm.define :srv2 do |srvs|
+    srvs.vm.box = "apache1"
+    srvs.vm.network :private_network, ip: "192.168.10.12"  
+	 srvs.vm.provision :shell, :path => "bootstrapSRV2.sh"
+    srvs.provision_as_role :srv2	
  end
-config.vm.define "SRV2" do |SRV2|
-    SRV2.vm.box = "apache2"
-    SRV2.vm.box_url = "http://files.vagrantup.com/precise32.box"
-    SRV2.vm.provision :shell, :path => "bootstrapSRV2.sh"
-    SRV2.vm.network :hostonly, "192.168.10.12" 
- end
+ 
 end
